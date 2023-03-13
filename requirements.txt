@@ -1,0 +1,4 @@
+casadi
+imagemagick
+matplotlib
+numpy
