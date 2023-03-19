@@ -3,6 +3,26 @@ cmake_minimum_required(VERSION 3.8)
 project(mpc_playground)
 
 find_package(casadi REQUIRED)
+find_package(Matplot++ REQUIRED)
+
+###############
+# MPC example #
+###############
+
+add_executable(mpc_example
+  "src/mpc_interface.cpp"
+  "src/mpc_ms_ackermann.cpp"
+)
+
+target_include_directories(mpc_example
+  PUBLIC
+    "include"
+)
+
+target_link_libraries(mpc_example
+  casadi
+  Matplot++::matplot
+)
 
 ###############
 # CasADi test #
