@@ -267,9 +267,6 @@ def plot_results(states_simulated, t, u_cl):
 
 
 def trajectory_animation(model_params, states_simulated):
-    ########################
-    # Trajectory animation #
-    ########################
     figure, axes = plt.subplots(1, 1,
                                 figsize=(8.0, 8.0)
                                 )
@@ -302,39 +299,45 @@ def trajectory_animation(model_params, states_simulated):
     line.set_data([], [])
 
     animation_function = animation.FuncAnimation(figure, animate_robot,
+                                                 init_func=initialise_animation,
                                                  fargs=(
-                                                 states_simulated, line, patch_robot_envelope, patch_robot_orientation),
+                                                     states_simulated, line, patch_robot_envelope,
+                                                     patch_robot_orientation, axes),
                                                  # init_func=initialise_animation,
                                                  frames=len(states_simulated[0, :]),
                                                  interval=100,
-                                                 blit=True
+                                                 blit=True,
+                                                 repeat=False
                                                  )
     animation_function.save('assets/img/dd-trajectory.gif',
-                            writer='imagemagick',
-                            fps=5
+                            writer='pillow',
+                            fps=10
                             )
+    print("Animation done, GIF stored")
 
 
+# def initialise_animation(_, line, patch_robot_envelope, patch_robot_orientation, axes):
 def initialise_animation():
-    axes.add_patch(patch_robot_envelope)
-    axes.add_patch(patch_robot_orientation)
-    line.set_data([], [])
-
     return []
 
 
-def animate_robot(i, states_simulated, line, patch_robot_envelope, patch_robot_orientation):
-    animate_envelope(i, states_simulated, line, patch_robot_envelope)
+def animate_robot(i, states_simulated, line, patch_robot_envelope, patch_robot_orientation, _):
+    animate_line(i, states_simulated, line)
+    animate_envelope(i, states_simulated, patch_robot_envelope)
     animate_orientation(i, states_simulated, patch_robot_orientation)
     return []
 
 
-def animate_envelope(i, states_simulated, line, patch_robot_envelope):
+def animate_line(i, states_simulated, line):
     x = states_simulated[0, :i]
     y = states_simulated[1, :i]
     line.set_data(x, y)
+    return line
+
+
+def animate_envelope(i, states_simulated, patch_robot_envelope):
     patch_robot_envelope.center = (states_simulated[0, i], states_simulated[1, i])
-    return patch_robot_envelope,
+    return patch_robot_envelope
 
 
 def animate_orientation(i, states_simulated, patch_robot_orientation):
@@ -342,7 +345,7 @@ def animate_orientation(i, states_simulated, patch_robot_orientation):
         states_simulated[0, i] + 0.25 * casadi.cos(states_simulated[2, i]),
         states_simulated[1, i] + 0.25 * casadi.sin(states_simulated[2, i])
     )
-    return patch_robot_orientation,
+    return patch_robot_orientation
 
 
 if __name__ == '__main__':
