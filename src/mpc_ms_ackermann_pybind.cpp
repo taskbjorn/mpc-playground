@@ -41,39 +41,11 @@ int main(int argc, char* argv[]) {
 //    std::vector<float> delta_dot_opt{0, 1, 2};
 
     py::scoped_interpreter guard{};
-    py::dict locals =
-        py::dict{"x_opt"_a = x_opt, "y_opt"_a = y_opt, "j_opt"_a = j_opt, "delta_dot_opt"_a = delta_dot_opt, "t_opt"_a =
-                                                                                                                 t_opt};
+    py::dict locals = py::dict{"x_opt"_a = x_opt, "y_opt"_a = y_opt, "j_opt"_a = j_opt,
+                               "delta_dot_opt"_a = delta_dot_opt, "t_opt"_a = t_opt};
     py::exec(R"(
-    import matplotlib.pyplot as plt
-
-    fig, ax = plt.subplots()
-    ax.plot(x_opt, y_opt, "-o")
-    ax.set_title("AGV trajectory")
-    ax.set_xlabel("X Coordinate [m]")
-    ax.set_ylabel("Y Coordinate [m]")
-    ax.set_aspect('equal', adjustable='box')
-
-    dir = 'assets/img'
-    plt.savefig(f"""{dir}/ack-trajectory.png""")
-    )", py::globals(), locals);
-
-    py::exec(R"(
-    fig, ax = plt.subplots()
-    ax.set_title('AGV longitudinal jerk')
-    ax.plot(t_opt, j_opt, "-o")
-    ax.set_xlabel("Time [s]")
-    ax.set_ylabel("Longitudinal jerk [m/s^3]")
-    ax.set_aspect('equal', adjustable = 'box')
-    plt.savefig(f"""{dir}/ack-controls-1.png""")
-
-    fig, ax = plt.subplots()
-    ax.set_title('AGV steering rate')
-    ax.plot(t_opt, delta_dot_opt, "-o")
-    ax.set_xlabel("Time [s]")
-    ax.set_ylabel("Steering rate [rad/s]")
-    ax.set_aspect('equal', adjustable = 'box')
-    plt.savefig(f"""{dir}/ack-controls-2.png""")
+    from python import plot_test
+    plot_test.create_plots(x_opt, y_opt, t_opt, j_opt, delta_dot_opt)
     )", py::globals(), locals);
 
     return EXIT_SUCCESS;
