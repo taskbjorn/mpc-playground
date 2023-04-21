@@ -1,7 +1,5 @@
 #include <mpc_playground/mpc_interface.hpp>
 
-#include <matplot/matplot.h>
-
 namespace MPC {
 
 ModelPredictiveController::ModelPredictiveController() {}

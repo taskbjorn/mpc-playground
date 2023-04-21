@@ -4,6 +4,8 @@ project(mpc_playground)
 
 find_package(casadi REQUIRED)
 find_package(Matplot++ REQUIRED)
+#add_subdirectory(3rd-party/matplotplusplus)
+find_package(pybind11 REQUIRED)
 
 ###############
 # MPC example #
@@ -17,13 +19,20 @@ add_executable(mpc_example
 target_include_directories(mpc_example
   PUBLIC
     "include"
-)
+    )
+
+target_include_directories(mpc_example_pybind
+    PUBLIC "include")
 
 target_link_libraries(mpc_example
   casadi
   Matplot++::matplot
 )
 
+target_link_libraries(mpc_example_pybind
+    casadi
+    pybind11::embed
+    )
 ###############
 # CasADi test #
 ###############
