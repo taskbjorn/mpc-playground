@@ -16,6 +16,12 @@ add_executable(mpc_example
   "src/mpc_ms_ackermann.cpp"
 )
 
+add_executable(mpc_example_pybind
+    src/mpc_ms_ackermann_pybind.cpp
+    src/mpc_interface.cpp
+    include/mpc_playground/mpc_interface.hpp
+    )
+
 target_include_directories(mpc_example
   PUBLIC
     "include"
